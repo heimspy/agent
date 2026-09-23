@@ -24,9 +24,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - name: Read core Go version
+      - name: Read test fork pin
         id: go
-        run: node -e "const fs=require('fs'),p=require('./core-lock.json'); fs.appendFileSync(process.env.GITHUB_OUTPUT,'version='+p.toolchain.slice(2)+String.fromCharCode(10))"
+        run: node -e "const fs=require('fs'),p=require('./sing-box.lock.json'); fs.appendFileSync(process.env.GITHUB_OUTPUT,'version='+p.toolchain.slice(2)+String.fromCharCode(10)+'revision='+p.revision+String.fromCharCode(10))"
+      - name: Check out test fork
+        uses: actions/checkout@v7
+        with:
+          repository: heimspy/sing-box
+          ref: ${{ steps.go.outputs.revision }}
+          path: .build/sing-box
+          persist-credentials: false
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ steps.go.outputs.version }}
@@ -35,7 +42,7 @@ jobs:
       - run: npm rebuild esbuild
       - run: npm run format:check
       - run: npm run typecheck
-      - run: npm run core:build
+      - run: npm run test:core
       - run: npm run build
       - run: npm test
       - uses: actions/upload-artifact@v7

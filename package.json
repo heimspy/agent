@@ -19,9 +19,7 @@
         "./main": "./src/agent/main.ts",
         "./engine": "./src/core/engine.ts",
         "./testing": "./src/test/helpers/helpers.ts",
-        "./package.json": "./package.json",
-        "./core-lock.json": "./core-lock.json",
-        "./build-core": "./scripts/build-core.mjs"
+        "./package.json": "./package.json"
     },
     "files": [
         "src/agent",
@@ -29,8 +27,6 @@
         "src/shared",
         "src/utils/format.ts",
         "src/test/helpers/helpers.ts",
-        "scripts/build-core.mjs",
-        "core-lock.json",
         "README.md",
         "LICENSE"
     ],
@@ -41,8 +37,7 @@
         "test": "vitest run",
         "format": "prettier --write src scripts/*.mjs esbuild.mjs package.json",
         "format:check": "prettier --check src scripts/*.mjs esbuild.mjs package.json",
-        "core:build": "node scripts/build-core.mjs",
-        "core:test": "node scripts/build-core.mjs --test"
+        "test:core": "node scripts/build-test-core.mjs"
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.30.0",
