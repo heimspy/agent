@@ -90,7 +90,7 @@ export function renderTransaction(t: Transaction): string {
         parts.splice(
             1,
             0,
-            `### Rules · ${(t.rules ?? []).join(', ')}${t.local ? ' · answered by Tapline' : ''}${t.upstreamUrl ? `\nSent to ${t.upstreamUrl}` : ''}`
+            `### Rules · ${(t.rules ?? []).join(', ')}${t.local ? ' · answered by Heimspy' : ''}${t.upstreamUrl ? `\nSent to ${t.upstreamUrl}` : ''}`
         )
     if (t.grpc)
         parts.splice(

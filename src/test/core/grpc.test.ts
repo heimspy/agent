@@ -26,7 +26,7 @@ const frame = (data: Uint8Array, flags = 0) => {
     return Buffer.concat([head, data])
 }
 
-const dir = mkdtempSync(join(tmpdir(), 'tapline-proto-'))
+const dir = mkdtempSync(join(tmpdir(), 'heimspy-proto-'))
 writeFileSync(join(dir, 'hello.proto'), PROTO)
 /** Encoder-side schema; `loadSync` supplies the bundled google/protobuf imports. */
 const root = protobuf.loadSync(join(dir, 'hello.proto'))

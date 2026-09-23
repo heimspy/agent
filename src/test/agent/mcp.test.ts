@@ -221,7 +221,7 @@ describe('MCP server', () => {
 
     it('serves a request as a text resource', async () => {
         const { client } = await connect(fakeAgent(items).agent)
-        const result = await client.readResource({ uri: 'tapline://requests/t2' })
+        const result = await client.readResource({ uri: 'heimspy://requests/t2' })
         expect((result.contents[0] as { text: string }).text).toContain(
             'POST https://api.example.com/v1/users/42'
         )

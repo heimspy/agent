@@ -9,12 +9,9 @@ import { join } from 'node:path'
 import { Engine } from '../../core/engine'
 
 export const CORE =
-    process.env.TAPLINE_TEST_CORE ||
+    process.env.HEIMSPY_TEST_CORE ||
     join(
-        __dirname,
-        '..',
-        '..',
-        '..',
+        process.cwd(),
         'core',
         `${process.platform}-${process.arch}`,
         process.platform === 'win32' ? 'sing-box.exe' : 'sing-box'
@@ -60,7 +57,7 @@ export function selfSigned(serialNumber = '02') {
 }
 
 export async function startEngine(configure?: (engine: Engine) => void) {
-    const directory = mkdtempSync(join(tmpdir(), 'tapline-test-'))
+    const directory = mkdtempSync(join(tmpdir(), 'heimspy-test-'))
     const engine = new Engine(directory, CORE)
     engine.settings.port = await freePort()
     configure?.(engine)

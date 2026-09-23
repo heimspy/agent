@@ -39,7 +39,7 @@ export class McpEndpoint {
     private async handle(req: http.IncomingMessage, res: http.ServerResponse) {
         const url = new URL(req.url ?? '/', 'http://127.0.0.1')
         if (url.pathname !== MCP_PATH) {
-            res.writeHead(404, { 'content-type': 'text/plain' }).end(`Tapline MCP: use ${MCP_PATH}`)
+            res.writeHead(404, { 'content-type': 'text/plain' }).end(`Heimspy MCP: use ${MCP_PATH}`)
             return
         }
         const transport = new StreamableHTTPServerTransport({

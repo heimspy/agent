@@ -1,0 +1,5 @@
+{
+  "repository": "https://github.com/heimspy/core.git",
+  "revision": "c1c5bfa51f7ab418ee1043034ef5be0c5ce836d7",
+  "toolchain": "go1.27.1"
+}

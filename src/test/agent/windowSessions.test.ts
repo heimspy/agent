@@ -15,7 +15,7 @@ import { CORE, freePort, httpServer, viaProxy } from '../helpers/helpers'
 const describeCore = existsSync(CORE) ? describe : describe.skip
 
 describeCore('window sessions', () => {
-    const directory = mkdtempSync(join(tmpdir(), 'tapline-windows-'))
+    const directory = mkdtempSync(join(tmpdir(), 'heimspy-windows-'))
     const script = join(directory, 'agent.js')
     let agent: ChildProcess
     let exited: Promise<number | null>

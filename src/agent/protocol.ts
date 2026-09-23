@@ -56,4 +56,4 @@ export type Message =
     { id: number; result: unknown } | { id: number; error: string } | { event: Event }
 
 /** Bumped whenever the wire format changes so stale agents are never reused. */
-export const PROTOCOL = 'tapline-agent-5'
+export const PROTOCOL = 'heimspy-agent-5'

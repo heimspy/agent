@@ -46,7 +46,7 @@ class TestClient {
 }
 
 describeCore('shared agent', () => {
-    const directory = mkdtempSync(join(tmpdir(), 'tapline-agent-'))
+    const directory = mkdtempSync(join(tmpdir(), 'heimspy-agent-'))
     const script = join(directory, 'agent.js')
     let agent: ChildProcess
     let exited: Promise<number | null>
@@ -58,7 +58,7 @@ describeCore('shared agent', () => {
             platform: 'node',
             format: 'cjs',
             outfile: script,
-            define: { 'process.env.TAPLINE_VERSION': JSON.stringify('0.10.0-test') },
+            define: { 'process.env.HEIMSPY_VERSION': JSON.stringify('0.10.0-test') },
             logLevel: 'silent'
         })
         agent = spawn(process.execPath, [script, directory, CORE], {

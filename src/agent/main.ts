@@ -72,7 +72,7 @@ function state(sessionId: string): AgentState {
         pid: process.pid,
         corePid: core.pid,
         coreVersion: engine.coreVersion,
-        agentVersion: process.env.TAPLINE_VERSION,
+        agentVersion: process.env.HEIMSPY_VERSION,
         mcpPort: mcp.port,
         build
     }
@@ -94,7 +94,7 @@ function ensureSession(id: string, name = '') {
     const engine = new Engine(directory, corePath, core)
     const session = { engine, name, preferredPort: engine.settings.port }
     engine.settings.port = 0
-    core.register(engine, 'tapline-' + createHash('sha256').update(id).digest('hex').slice(0, 32))
+    core.register(engine, 'heimspy-' + createHash('sha256').update(id).digest('hex').slice(0, 32))
     sessions.set(id, session)
     engine.on('event', (event) => {
         if (sessions.get(id)?.engine !== engine) return

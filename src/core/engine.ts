@@ -450,7 +450,7 @@ export class Engine extends EventEmitter<{ event: [Event] }> implements Handlers
                     decision.local = {
                         status: rule.status ?? 403,
                         headers: { 'content-type': 'text/plain; charset=utf-8' },
-                        body: Buffer.from(`Blocked by Tapline rule "${ruleLabel(rule)}"\n`)
+                        body: Buffer.from(`Blocked by Heimspy rule "${ruleLabel(rule)}"\n`)
                     }
                     applied.push(ruleLabel(rule))
                     break rules
@@ -506,7 +506,7 @@ export class Engine extends EventEmitter<{ event: [Event] }> implements Handlers
             t.paused = undefined
             applied.push('breakpoint')
             if (edit === 'abort') {
-                decision.abort = 'Aborted at a Tapline breakpoint'
+                decision.abort = 'Aborted at a Heimspy breakpoint'
                 t.rules = applied
                 this.publish(t)
                 return decision
@@ -573,7 +573,7 @@ export class Engine extends EventEmitter<{ event: [Event] }> implements Handlers
                 return {
                     status: 404,
                     headers: { 'content-type': 'text/plain; charset=utf-8' },
-                    body: Buffer.from(`Tapline: cannot read ${rule.file}\n`)
+                    body: Buffer.from(`Heimspy: cannot read ${rule.file}\n`)
                 }
             }
         }
@@ -678,7 +678,7 @@ export class Engine extends EventEmitter<{ event: [Event] }> implements Handlers
                 t.paused = undefined
                 applied.push('breakpoint')
                 if (edit === 'abort') {
-                    decision.abort = 'Aborted at a Tapline breakpoint'
+                    decision.abort = 'Aborted at a Heimspy breakpoint'
                     t.rules = [...(t.rules ?? []), ...applied]
                     this.publish(t)
                     return decision

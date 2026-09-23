@@ -70,7 +70,7 @@ describeCore('interception rules with the bundled core', () => {
     let engine: Engine
     let origin: Awaited<ReturnType<typeof httpServer>>
     let mirror: Awaited<ReturnType<typeof httpServer>>
-    const directory = mkdtempSync(join(tmpdir(), 'tapline-rules-'))
+    const directory = mkdtempSync(join(tmpdir(), 'heimspy-rules-'))
 
     const echo = (name: string) =>
         httpServer((req, res) => {
@@ -201,7 +201,7 @@ describeCore('interception rules with the bundled core', () => {
                 url: '*/rewrite',
                 request: {
                     headers: { 'x-added': 'yes', 'x-drop': null },
-                    bodyReplace: { pattern: 'world', replacement: 'tapline' }
+                    bodyReplace: { pattern: 'world', replacement: 'heimspy' }
                 },
                 response: {
                     status: 418,
@@ -220,12 +220,12 @@ describeCore('interception rules with the bundled core', () => {
         expect(reply.status).toBe(418)
         const parsed = JSON.parse(reply.body)
         expect(parsed.server).toBe('edited')
-        expect(parsed.body).toBe('hello tapline')
+        expect(parsed.body).toBe('hello heimspy')
         expect(parsed.headers['x-added']).toBe('yes')
         expect(parsed.headers['x-drop']).toBeUndefined()
         expect(parsed.headers['content-length']).toBe('13')
         const t = await settled(engine, (t) => t.url === url)
-        expect(t.requestBody).toBe('hello tapline')
+        expect(t.requestBody).toBe('hello heimspy')
         expect(t.requestHeaders['x-added']).toBe('yes')
         expect(t.status).toBe(418)
         expect(t.responseHeaders['x-server']).toBe('rewritten')

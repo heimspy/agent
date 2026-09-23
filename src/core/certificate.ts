@@ -25,7 +25,7 @@ export function certificatePaths(directory: string) {
 export const TRUSTSTORE_PASSWORD = 'changeit'
 
 /**
- * Build `ca.p12` from Node's bundled Mozilla roots plus the Tapline CA so a JVM
+ * Build `ca.p12` from Node's bundled Mozilla roots plus the Heimspy CA so a JVM
  * pointed at it still trusts hosts whose TLS is tunnelled rather than decrypted.
  */
 export function ensureTruststore(directory: string, certificate: string): string {
@@ -39,7 +39,7 @@ export function ensureTruststore(directory: string, certificate: string): string
     return path
 }
 
-/** Public roots plus Tapline for clients whose CA file replaces native trust. */
+/** Public roots plus Heimspy for clients whose CA file replaces native trust. */
 export function ensureCertificateBundle(directory: string, certificate: string): string {
     const path = certificatePaths(directory).bundle
     const bundle = [certificate, ...rootCertificates].join('\n') + '\n'
@@ -50,7 +50,7 @@ export function ensureCertificateBundle(directory: string, certificate: string):
 
 let generating: Promise<RootIdentity> | undefined
 
-/** Load or create the Tapline root CA (RSA 2048, 10 years, CA:TRUE). */
+/** Load or create the Heimspy root CA (RSA 2048, 10 years, CA:TRUE). */
 export function ensureRootIdentity(directory: string): Promise<RootIdentity> {
     const paths = certificatePaths(directory)
     if (existsSync(paths.certificate) && existsSync(paths.key))
@@ -74,8 +74,8 @@ async function generate(directory: string): Promise<RootIdentity> {
     cert.validity.notBefore = new Date(Date.now() - 24 * 3600 * 1000)
     cert.validity.notAfter = new Date(Date.now() + 10 * 365 * 24 * 3600 * 1000)
     const subject = [
-        { name: 'commonName', value: 'Tapline Root CA' },
-        { name: 'organizationName', value: 'Tapline' }
+        { name: 'commonName', value: 'Heimspy Root CA' },
+        { name: 'organizationName', value: 'Heimspy' }
     ]
     cert.setSubject(subject)
     cert.setIssuer(subject)
@@ -124,7 +124,7 @@ function trustStoreAsn1(certs: string[], password: string) {
                             Class.UNIVERSAL,
                             Type.BMPSTRING,
                             false,
-                            util.encodeUtf8(`tapline-${index}`).replace(/./g, (c) => '\0' + c)
+                            util.encodeUtf8(`heimspy-${index}`).replace(/./g, (c) => '\0' + c)
                         )
                     ])
                 ]),

@@ -9,8 +9,8 @@ import { join } from 'node:path'
 import { ensureRootIdentity, ensureTruststore, TRUSTSTORE_PASSWORD } from '../../core/certificate'
 
 describe('Java trust store', () => {
-    it('contains the Tapline CA and the public roots', async () => {
-        const directory = mkdtempSync(join(tmpdir(), 'tapline-p12-'))
+    it('contains the Heimspy CA and the public roots', async () => {
+        const directory = mkdtempSync(join(tmpdir(), 'heimspy-p12-'))
         const root = await ensureRootIdentity(directory)
         const path = ensureTruststore(directory, root.certificate)
         const p12 = forge.pkcs12.pkcs12FromAsn1(
@@ -19,7 +19,7 @@ describe('Java trust store', () => {
         )
         const certs = p12.getBags({ bagType: forge.pki.oids.certBag })[forge.pki.oids.certBag] ?? []
         const subjects = certs.map((bag) => bag.cert?.subject.getField('CN')?.value)
-        expect(subjects).toContain('Tapline Root CA')
+        expect(subjects).toContain('Heimspy Root CA')
         expect(certs.length).toBeGreaterThan(100)
         // Second call reuses the file.
         expect(ensureTruststore(directory, root.certificate)).toBe(path)
@@ -51,8 +51,8 @@ describe('Java trust store', () => {
 })
 
 describe('PEM trust bundle', () => {
-    it('retains every public root alongside Tapline and refreshes stale contents', async () => {
-        const directory = mkdtempSync(join(tmpdir(), 'tapline-bundle-'))
+    it('retains every public root alongside Heimspy and refreshes stale contents', async () => {
+        const directory = mkdtempSync(join(tmpdir(), 'heimspy-bundle-'))
         const root = await ensureRootIdentity(directory)
         const path = ensureCertificateBundle(directory, root.certificate)
         const bundle = readFileSync(path, 'utf8')

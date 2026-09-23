@@ -26,7 +26,7 @@ export interface TrafficSource {
 }
 
 // Injected by esbuild from package.json; tests run the source and get the fallback.
-const VERSION = process.env.TAPLINE_VERSION ?? '0.0.0'
+const VERSION = process.env.HEIMSPY_VERSION ?? '0.0.0'
 const BODY_LIMIT = 20_000
 
 const text = (value: unknown) => ({
@@ -116,10 +116,10 @@ export function createServer(source: TrafficSource | SessionSource) {
         }
     })
     const server = new McpServer(
-        { name: 'tapline', version: VERSION },
+        { name: 'heimspy', version: VERSION },
         {
             instructions:
-                'Tapline captures HTTP(S), HTTP/2, HTTP/3, gRPC, WebSocket and SSE traffic from ' +
+                'Heimspy captures HTTP(S), HTTP/2, HTTP/3, gRPC, WebSocket and SSE traffic from ' +
                 'VS Code terminals and debug sessions. Use list_requests or search to find ' +
                 'requests, get_request for headers and bodies, and replay or send to issue ' +
                 'requests through the proxy. Bodies are truncated in get_request; use get_body ' +
@@ -166,7 +166,7 @@ export function createServer(source: TrafficSource | SessionSource) {
             inputSchema: { sessionId: z.string().optional() },
             title: 'Capture status',
             description:
-                'Whether Tapline is capturing, on which proxy port, and how many requests are retained.',
+                'Whether Heimspy is capturing, on which proxy port, and how many requests are retained.',
             annotations: { readOnlyHint: true }
         },
         guard(() => {
@@ -423,7 +423,7 @@ export function createServer(source: TrafficSource | SessionSource) {
         {
             title: 'Send a request',
             description:
-                'Issue an HTTP request through the Tapline proxy so it is captured like any other; returns the completed transaction.',
+                'Issue an HTTP request through the Heimspy proxy so it is captured like any other; returns the completed transaction.',
             inputSchema: {
                 sessionId: z
                     .string()
@@ -558,13 +558,13 @@ export function createServer(source: TrafficSource | SessionSource) {
                 )
                 .slice(-limit)
             if (!items.length) throw new Error('Nothing to export')
-            return JSON.stringify(toHAR(items, { name: 'Tapline', version: VERSION }))
+            return JSON.stringify(toHAR(items, { name: 'Heimspy', version: VERSION }))
         })
     )
 
     server.registerResource(
         'request',
-        new ResourceTemplate('tapline://requests/{id}', { list: undefined }),
+        new ResourceTemplate('heimspy://requests/{id}', { list: undefined }),
         {
             title: 'Captured request',
             description: 'A captured request and its response as text',
@@ -589,7 +589,7 @@ export function createServer(source: TrafficSource | SessionSource) {
     if ('sessions' in source)
         server.registerResource(
             'session-request',
-            new ResourceTemplate('tapline://sessions/{sessionId}/requests/{id}', {
+            new ResourceTemplate('heimspy://sessions/{sessionId}/requests/{id}', {
                 list: undefined
             }),
             { title: 'Window captured request', mimeType: 'text/plain' },

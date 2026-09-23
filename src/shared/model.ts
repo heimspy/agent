@@ -130,7 +130,7 @@ export interface Transaction {
     paused?: RulePhase
     /** Names of the rules that acted on this transaction, in the order they applied. */
     rules?: string[]
-    /** The response was produced by Tapline (map local, block) instead of the server. */
+    /** The response was produced by Heimspy (map local, block) instead of the server. */
     local?: boolean
     /** Where the request was actually sent when a rule changed its URL. */
     upstreamUrl?: string
@@ -285,7 +285,7 @@ export interface AgentState {
     port: number
     certificatePath: string
     caBundlePath?: string
-    /** PKCS#12 trust store (public roots + Tapline CA) for JVM clients. */
+    /** PKCS#12 trust store (public roots + Heimspy CA) for JVM clients. */
     truststorePath: string
     clients: number
     pid: number
@@ -380,7 +380,7 @@ export function formatHttpVersion(v?: string): string {
 }
 
 /** HAR 1.2 export of completed HTTP transactions. */
-export function toHAR(items: Transaction[], creator = { name: 'Tapline', version: '0.1.0' }) {
+export function toHAR(items: Transaction[], creator = { name: 'Heimspy', version: '0.1.0' }) {
     const headers = (h: Headers) => Object.entries(h).map(([name, value]) => ({ name, value }))
     const mime = (h: Headers) =>
         Object.entries(h).find(([k]) => k.toLowerCase() === 'content-type')?.[1] ?? ''

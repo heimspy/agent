@@ -1,0 +1,68 @@
+name: Agent CI
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [published]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Read core Go version
+        id: go
+        run: node -e "const fs=require('fs'),p=require('./core-lock.json'); fs.appendFileSync(process.env.GITHUB_OUTPUT,'version='+p.toolchain.slice(2)+String.fromCharCode(10))"
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ steps.go.outputs.version }}
+          cache: false
+      - run: npm ci --ignore-scripts
+      - run: npm rebuild esbuild
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run core:build
+      - run: npm run build
+      - run: npm test
+      - uses: actions/upload-artifact@v7
+        if: runner.os == 'Linux'
+        with:
+          name: agent
+          path: dist/
+  release:
+    if: github.event_name == 'release'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/download-artifact@v7
+        with:
+          name: agent
+          path: dist
+      - name: Verify release version and attach bundles
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          test "${TAG#v}" = "$(node -p "require('./package.json').version")"
+          npm pack --ignore-scripts
+          gh release upload "$TAG" dist/agent.js dist/agent.js.map heimspy-agent-*.tgz

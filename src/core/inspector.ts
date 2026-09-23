@@ -55,7 +55,7 @@ export interface RequestDecision {
     headers?: WireHeaders
     /** Replacement body; the recorded body is what is sent. */
     body?: Buffer
-    /** Answer from Tapline without contacting the server. */
+    /** Answer from Heimspy without contacting the server. */
     local?: { status: number; headers: WireHeaders; body: Buffer }
     /** Fail the request with a 502 (breakpoint abort). */
     abort?: string
@@ -115,9 +115,9 @@ export interface InspectorOptions {
 export function coreConfig(host: string, port: number) {
     return {
         log: { level: 'info', output: 'stderr', disabled: false, timestamp: false },
-        services: [{ type: 'tapline-inspector', tag: 'inspector' }],
-        inbounds: [{ type: 'tapline-mixed', tag: 'proxy', listen: host, listen_port: port }],
-        outbounds: [{ type: 'tapline-inspect', tag: 'inspect', inspector: 'inspector' }],
+        services: [{ type: 'heimspy-inspector', tag: 'inspector' }],
+        inbounds: [{ type: 'heimspy-mixed', tag: 'proxy', listen: host, listen_port: port }],
+        outbounds: [{ type: 'heimspy-inspect', tag: 'inspect', inspector: 'inspector' }],
         route: {
             final: 'inspect',
             rules: [
@@ -555,8 +555,8 @@ export class Inspector {
             windowsHide: true,
             env: {
                 ...process.env,
-                TAPLINE_HELPER_STDIN: '1',
-                TAPLINE_HELPER_PARENT: String(process.pid)
+                HEIMSPY_HELPER_STDIN: '1',
+                HEIMSPY_HELPER_PARENT: String(process.pid)
             }
         }))
         const wire = (this.wire = new Wire(child.stdin!))
